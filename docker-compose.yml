@@ -7,8 +7,6 @@ services:
       dockerfile: .docker/app/Dockerfile
     ports:
       - 8080:2015
-      - 8081:2019
-      - 8082:2016
-      - 8083:84
     volumes:
       - ./app:/srv/app
+      - ./.docker/app/caddy/data:${HOME}/.local/share/caddy/

@@ -9,6 +9,7 @@ RUN curl --silent --show-error --fail --location \
 
 COPY app /srv/app
 COPY .docker/app/Caddyfile /etc/Caddyfile
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 WORKDIR /srv/app/
 
