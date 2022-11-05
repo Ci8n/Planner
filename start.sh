@@ -1,8 +1,9 @@
 compose_args=''; 
-while getopts f: flag
+while getopts f:r: flag
 do
     case "${flag}" in
         f) compose_args+=' --build';;
+        r) compose_args+=' --force-recreate';;
     esac
 done
 

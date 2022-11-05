@@ -1,4 +1,4 @@
-:2015 {
+localhost:2015 {
 	root * /srv/app/public
 
 	php_fastcgi 127.0.0.1:9000 {
@@ -7,7 +7,4 @@
 
 	rewrite * index.php?{query}
 	log
-}
-:2016 {
-	respond "Hello world!"
 }
