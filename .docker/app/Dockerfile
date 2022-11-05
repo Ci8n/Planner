@@ -13,5 +13,7 @@ COPY .docker/app/Caddyfile /etc/
 WORKDIR /srv/app/
 
 RUN chown -R www-data:www-data /srv/app
+RUN 
 
 CMD ["/usr/bin/caddy", "run", "--config", "/etc/Caddyfile"];
+CMD ["php-fpm"];
