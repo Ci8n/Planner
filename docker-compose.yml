@@ -1,12 +1,23 @@
 version: '3'
 services:
-  app:
-    container_name: 'app-ppp'
+  app-fpm:
+    container_name: 'app-fpm'
     build:
       context: .
       dockerfile: .docker/app/Dockerfile
     ports:
-      - 8080:2015
+      - 9000:9000
     volumes:
       - ./app:/srv/app
-      - ./.docker/app/caddy/data:${HOME}/.local/share/caddy/
+
+  app-caddy:
+    container_name: 'app-caddy'
+    depends_on: 
+      - app-fpm
+    build:
+      context: .
+      dockerfile: .docker/caddy/Dockerfile
+    ports:
+      - 8080:2015
+    volumes:
+      - ./.docker/caddy/data:${HOME}/.local/share/caddy/
