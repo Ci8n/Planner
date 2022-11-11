@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 compose_args=''; 
 while getopts frd flag
 do
