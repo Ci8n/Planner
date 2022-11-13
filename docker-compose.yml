@@ -1,12 +1,42 @@
 version: '3'
 services:
+  pgsql:
+    container_name: 'db-ppp'
+    image: postgres:14-alpine3.16
+    ports:
+      - 5432:5432
+    volumes:
+      - ./.docker/db/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER="${DB_USER:?err}"
+      - POSTGRES_PASSWORD="${DB_PASS:?err}"
+      - POSTGRES_DB=${DB_NAME:?err}
+  
+  frontend:
+    container_name: 'front-ppp'
+    build:
+      context: .
+      dockerfile: .docker/front/Dockerfile
+    volumes:
+      - ./front:/srv/front
+    environment:
+      - WDS_SOCKET_HOST	="https://localhost"
+      - WDS_SOCKET_PORT=8080
+
   app:
     container_name: 'app-ppp'
+    depends_on:
+      - pgsql
+      - frontend
     build:
       context: .
       dockerfile: .docker/app/Dockerfile
+    links:
+      - pgsql:database
     ports:
-      - 8080:2015
+      - 8080:8080
+      - 8081:8081
     volumes:
       - ./app:/srv/app
-      - ./.docker/app/caddy/data:${HOME}/.local/share/caddy/
+      - ./.docker/app/caddy/data:/root/.local/share/caddy
+
