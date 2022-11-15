@@ -11,10 +11,23 @@ services:
       - POSTGRES_USER="${DB_USER:?err}"
       - POSTGRES_PASSWORD="${DB_PASS:?err}"
       - POSTGRES_DB=${DB_NAME:?err}
+  
+  frontend:
+    container_name: 'front-ppp'
+    build:
+      context: .
+      dockerfile: .docker/front/Dockerfile
+    volumes:
+      - ./front:/srv/front
+    environment:
+      - WDS_SOCKET_HOST	="https://localhost"
+      - WDS_SOCKET_PORT=8080
+
   app:
     container_name: 'app-ppp'
     depends_on:
       - pgsql
+      - frontend
     build:
       context: .
       dockerfile: .docker/app/Dockerfile
@@ -26,3 +39,4 @@ services:
     volumes:
       - ./app:/srv/app
       - ./.docker/app/caddy/data:/root/.local/share/caddy
+

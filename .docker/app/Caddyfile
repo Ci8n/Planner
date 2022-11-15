@@ -9,6 +9,6 @@ localhost:8081 {
 	log
 }
 
-http://localhost:8080 {
-	redir https://localhost:8081 permanent
+localhost:8080 {
+	reverse_proxy frontend:3000
 }
