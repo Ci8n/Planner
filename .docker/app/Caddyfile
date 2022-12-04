@@ -11,9 +11,16 @@
 }
 
 {$FRONTEND_URL} {
-	handle_path /api/* {
-		reverse_proxy https://backend:8081
+	reverse_proxy frontend:3000
+}
+
+{$STATIC_PUBLIC_URL} {
+	@getmatch method GET
+	handle @getmatch {
+		reverse_proxy @getmatch static:{$STATIC_PRIVATE_PORT}
 	}
 
-	reverse_proxy frontend:3000
+	abort
+
+	log
 }
