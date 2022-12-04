@@ -19,6 +19,15 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
+            - '../src/**/{Events,Interfaces,Traits,Exceptions}'
+    App\Util\FileUpload\HttpFileUploader:
+        arguments:
+            $fileUploadUrl: 'http://%env(resolve:STATIC_PRIVATE_URL)%'
+    App\Console\UploadFileCommand:
+        arguments:
+            $fileAccessor: '@App\Util\FileUpload\FileAccessor' 
+    App\Util\FileUpload\FileAccessor:
+        arguments:
+            $fileNameGenerator: '@App\Util\FileUpload\FileNameGenerator'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -1,0 +1,27 @@
+{
+	order upload before file_server
+	log {
+		level DEBUG
+	}
+}
+
+:{$STATIC_PRIVATE_PORT} {
+	root * /srv/static
+
+	handle_path /.* {
+		respond 401
+	}
+
+	file_server
+	templates
+
+	@uploaded method POST
+
+	upload @uploaded {
+		dest_dir .
+		max_form_buffer 500MB
+		response_template .template/response_template.txt
+	}
+
+	log
+}
