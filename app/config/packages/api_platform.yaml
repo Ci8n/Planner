@@ -2,3 +2,7 @@ api_platform:
   mapping:
     - '%kernel.project_dir%/src/Entity'
     - '%kernel.project_dir%/config/api_platform' 
+    # The title of the API.
+  title: 'API title'
+  # The description of the API.
+  description: 'API description'

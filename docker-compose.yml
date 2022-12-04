@@ -20,14 +20,29 @@ services:
     volumes:
       - ./front:/srv/front
     environment:
-      - WDS_SOCKET_HOST	="https://localhost"
-      - WDS_SOCKET_PORT=8080
+      - WDS_SOCKET_HOST ="${WDS_SOCKET_HOST:?err}"
+      - WDS_SOCKET_PORT=${WDS_SOCKET_PORT:?err}
+      - REACT_APP_API_URL=${REACT_APP_API_URL:?err}
+
+  static:
+    container_name: 'static-ppp'
+    build:
+      context: .
+      dockerfile: .docker/static/Dockerfile
+    volumes:
+      - ./static:/srv/static
+      - ./.docker/static/caddy/data:/root/.local/share/caddy
+      - ./.docker/static/Caddyfile:/etc/Caddyfile
+      - ./.docker/static/caddy/logs:/var/log
+    environment:
+      - STATIC_PRIVATE_PORT=${STATIC_PRIVATE_PORT:?err}
 
   app:
     container_name: 'app-ppp'
     depends_on:
       - pgsql
       - frontend
+      - static
     build:
       context: .
       dockerfile: .docker/app/Dockerfile
@@ -36,7 +51,14 @@ services:
     ports:
       - 8080:8080
       - 8081:8081
+      - ${STATIC_PUBLIC_PORT:?err}:${STATIC_PUBLIC_PORT:?err}
     volumes:
       - ./app:/srv/app
       - ./.docker/app/caddy/data:/root/.local/share/caddy
-
+      - ./.docker/app/Caddyfile:/etc/Caddyfile
+      - ./.docker/app/caddy/logs:/var/log
+    environment:
+      - BACKEND_URL=${BACKEND_URL?:err}
+      - FRONTEND_URL=${FRONTEND_URL?:err}
+      - STATIC_PRIVATE_PORT=${STATIC_PRIVATE_PORT:?err}
+      - STATIC_PUBLIC_URL="${STATIC_PUBLIC_URL:?err}"

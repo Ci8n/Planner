@@ -1,14 +1,26 @@
-localhost:8081 {
+{$BACKEND_URL} {
 	root * /srv/app/public
 
-	php_fastcgi 127.0.0.1:9000 {
-		root /srv/app/public
-	}
+	php_fastcgi 127.0.0.1:9000
 
-	rewrite * index.php?{query}
+	try_files {path} /index.php?{query}
+
+	file_server
+
 	log
 }
 
-localhost:8080 {
+{$FRONTEND_URL} {
 	reverse_proxy frontend:3000
+}
+
+{$STATIC_PUBLIC_URL} {
+	@getmatch method GET
+	handle @getmatch {
+		reverse_proxy @getmatch static:{$STATIC_PRIVATE_PORT}
+	}
+
+	abort
+
+	log
 }
