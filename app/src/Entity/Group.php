@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Repository\GroupRepository;
+use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\GroupRepository;
 use Doctrine\DBAL\Types\Types;
